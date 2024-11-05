@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers Connect - Sign In / Sign Up</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="container" class="container">
+    <div class="row">
+        <!-- SIGN UP -->
+        <div class="col align-items-center flex-col sign-up">
+            <div class="form-wrapper align-items-center">
+                <div class="form sign-up">
+                    <form id="signUpForm">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="first name" placeholder="First name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="Last name" placeholder="Last name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        
+                        <!-- Checkbox Counter for User Type Registration -->
+                        <div class="input-group">
+                         <p>Register as:</p>
+                        <div class="checkbox-group">
+                        <input type="radio" id="farmer" name="account_type" value="farmer">
+                        <label for="farmer">Farmer</label>
+                        </div>
+                        <div class="checkbox-group">
+                        <input type="radio" id="user" name="account_type" value="user">
+                          <label for="user">User</label>
+                        </div>
+                        <div class="checkbox-group">
+                        <input type="radio" id="agriculture_grad" name="account_type" value="agriculture_grad">
+                        <label for="agriculture_grad">Researcher</label>
+    </div>
+</div>
+
+                        <div class="input-group">
+                            <i class='bx bx-mail-send'></i>
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="confirmPassword" placeholder="Confirm password" required>
+                        </div>
+                        <button type="submit">Sign up</button>
+                        <p id="signUpError" style="color: red;"></p>
+                        <p>
+                            <span>Already have an account?</span>
+                            <b onclick="toggle()" class="pointer">Sign in here</b>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- SIGN IN -->
+        <!-- Sign In Section -->
+<div class="col align-items-center flex-col sign-in">
+    <div class="form-wrapper align-items-center">
+        <div class="form sign-in">
+            <form id="signInForm">
+                <!-- Username Input -->
+                <div class="input-group">
+                    <i class='bx bxs-user'></i>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-group">
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+
+                <!-- Register As Radio Buttons -->
+                <div class="input-group">
+                    <h3>Register as:</h3>
+                    <div class="checkbox-group">
+                        <input type="radio" id="farmer" name="account_type" value="farmer">
+                        <label for="farmer">Farmer</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="radio" id="user" name="account_type" value="user">
+                        <label for="user">User</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="radio" id="agriculture_grad" name="account_type" value="agriculture_grad">
+                        <label for="agriculture_grad">Researcher</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit">Sign in</button>
+
+                <!-- Error Message -->
+                <p id="signInError" style="color: red;"></p>
+
+                <!-- Forgot Password and Signup Link -->
+                <p><b>Forgot password?</b></p>
+                <p>
+                    <span>Don't have an account?</span>
+                    <b onclick="toggle()" class="pointer">Sign up here</b>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+<script>
+    document.getElementById("signUpForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get the selected account type during signup
+        const accountType = document.querySelector('input[name="account_type"]:checked').value;
+
+        // Navigate based on the selected account type
+        if (accountType === "user") {
+            window.location.href = "hi.html"; // Navigate to user dashboard
+        } else if (accountType === "farmer") {
+            window.location.href = "farmer_det.html"; // Navigate to farmer dashboard
+        } else if (accountType === "agriculture_grad") {
+            window.location.href = "researcher_det.html"; // Navigate to researcher dashboard
+        } else {
+            alert("Please select an account type!");
+        }
+    });
+
+    document.getElementById("signInForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get the selected account type during login
+        const accountType = document.querySelector('input[name="account_type"]:checked').value;
+
+        // Navigate based on the selected account type
+        if (accountType === "user") {
+            window.location.href = "hi.html"; // Navigate to user dashboard
+        } else if (accountType === "farmer") {
+            window.location.href = "farmer1.html"; // Navigate to farmer dashboard
+        } else if (accountType === "agriculture_grad") {
+            window.location.href = "Researcher1.html"; // Navigate to researcher dashboard
+        } else {
+            alert("Please select an account type!");
+        }
+    });
+</script>
+
+
+<!-- Link to your external JavaScript file -->
+<script src="index.js"></script>
+</body>
+</html>

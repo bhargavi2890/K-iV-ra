@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegetable Market</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f9f9f9;
+            margin: 0;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            color: #f0a500;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Main content styling */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .cart-summary {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Vegetable grid styling */
+        .vegetable-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns */
+            gap: 15px;
+            margin-top: 50px; /* Adjust for fixed cart summary */
+        }
+
+        /* Vegetable card styling */
+        .vegetable-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 10px;
+        }
+
+        .vegetable-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .vegetable-details {
+            padding: 10px 5px;
+        }
+
+        .vegetable-details h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .vegetable-details p {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .vegetable-details .price {
+            font-size: 1em;
+            color: #f07d00;
+            font-weight: bold;
+        }
+
+        .add-to-cart {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #218838;
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .cart-modal.active {
+            display: block;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar with categories -->
+    <div class="sidebar">
+        <h2>Vegetable Categories</h2>
+        <a onclick="filterVegetables('all')">All Vegetables</a>
+        <a onclick="filterVegetables('leafy')">Leafy Vegetables</a>
+        <a onclick="filterVegetables('root')">Root Vegetables</a>
+        <a onclick="filterVegetables('fruit')">Fruit Vegetables</a>
+        <a onclick="filterVegetables('legumes')">Legumes</a>
+    </div>
+
+    <!-- Main content area with vegetable cards -->
+    <div class="main-content">
+        <h1>Fresh Vegetables</h1>
+        <div class="cart-summary">
+            <p>Total: ₹<span id="cart-total">0</span></p>
+            <button class="checkout-btn" onclick="proceedToCheckout()"><a href="hi.html">Proceed to Checkout</a></button>
+        </div>
+
+        <div id="cart-modal" class="cart-modal">
+            <h2>Shopping Cart</h2>
+            <ul id="cart-items-list"></ul>
+            <p>Total: ₹<span id="modal-cart-total">0</span></p>
+            <button onclick="closeCart()">Close</button>
+        </div>
+
+        <div class="vegetable-grid" id="vegetableGrid">
+            <div class="vegetable-card" data-category="leafy" data-name="Spinach" data-price="40">
+                <img src="spinach.jfif" alt="Spinach">
+                <div class="vegetable-details">
+                    <h3>Spinach</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹40</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="vegetable-card" data-category="root" data-name="Carrot" data-price="80">
+                <img src="carrot.jfif" alt="Carrot">
+                <div class="vegetable-details">
+                    <h3>Carrot</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹80</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="vegetable-card" data-category="fruit" data-name="Tomato" data-price="30">
+                <img src="tomato.jfif" alt="Tomato">
+                <div class="vegetable-details">
+                    <h3>Tomato</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹30</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="vegetable-card" data-category="root" data-name="Potato" data-price="40">
+                <img src="potato.jfif" alt="Potato">
+                <div class="vegetable-details">
+                    <h3>Potato</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹40</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="vegetable-card" data-category="leafy" data-name="Lettuce" data-price="60">
+                <img src="lettuce.jfif" alt="Lettuce">
+                <div class="vegetable-details">
+                    <h3>Lettuce</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹60</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="vegetable-card" data-category="legumes" data-name="Green Beans" data-price="90">
+                <img src="greenbeans.jfif" alt="Green Beans">
+                <div class="vegetable-details">
+                    <h3>Green Beans</h3>
+                    <p>Quantity: 1 kg</p>
+                    <p class="price">₹90</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <!-- Add more vegetable cards as needed with different categories and prices -->
+        </div>
+    </div>
+
+    <script>
+        const cart = [];
+        let cartTotal = 0;
+
+        function addToCart(vegetableName, vegetablePrice) {
+            const itemIndex = cart.findIndex(item => item.name === vegetableName);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += 1;
+            } else {
+                cart.push({ name: vegetableName, price: vegetablePrice, quantity: 1 });
+            }
+
+            updateCartTotal();
+        }
+
+        function updateCartTotal() {
+            cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            document.getElementById('cart-total').innerText = cartTotal;
+            updateModal();
+        }
+
+        function updateModal() {
+            const cartItemsList = document.getElementById('cart-items-list');
+            cartItemsList.innerHTML = '';
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = `${item.name} - ₹${item.price} x ${item.quantity}`;
+                cartItemsList.appendChild(li);
+            });
+
+            document.getElementById('modal-cart-total').innerText = cartTotal;
+        }
+
+        function openCart() {
+            document.getElementById('cart-modal').classList.add('active');
+        }
+
+        function closeCart() {
+            document.getElementById('cart-modal').classList.remove('active');
+        }
+
+        function proceedToCheckout() {
+            // Implement checkout logic here
+            alert('Proceeding to checkout with total: ₹' + cartTotal);
+        }
+
+        // Add event listeners to the "Add to Cart" buttons
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const vegetableCard = button.closest('.vegetable-card');
+                const vegetableName = vegetableCard.getAttribute('data-name');
+                const vegetablePrice = parseInt(vegetableCard.getAttribute('data-price'));
+                addToCart(vegetableName, vegetablePrice);
+                openCart();
+            });
+        });
+
+        // Filtering Functionality
+        function filtervegetable(category) {
+            const vegetableCards = document.querySelectorAll('.vegetable-card');
+
+            vegetableCards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block'; // Show all
+                } else {
+                    const cardCategory = card.getAttribute('data-category');
+                    card.style.display = cardCategory === category ? 'block' : 'none'; // Show based on selected category
+                }
+            });
+        }
+    </script>
+    
+   
+</body>
+
+</html>

@@ -1,0 +1,459 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff5733;
+}
+
+/* Navbar Styles */
+.top-navbar {
+    position: fixed; /* Makes the navbar fixed at the top */
+    top: 0; /* Aligns it to the top */
+    left: 0;
+    width: 100%; /* Full width */
+    background-color: #333; /* Background to ensure visibility */
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Ensure it stays above other elements */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for better look */
+}
+
+.logo h1 {
+    color: #FF6347;
+    font-size: 1.5em;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+}
+
+#city-dropdown {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+#map-link {
+    margin-left: 15px;
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+#map-link:hover {
+    text-decoration: underline;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+}
+
+.modal-content {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    margin: 10% auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+}
+
+/* Search Bar Styles */
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.user-actions a {
+    margin: 0 10px;
+    color: white; /* Change link color */
+}
+
+/* Container Styles */
+.container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust height for fixed navbar */
+    margin-top: 60px; /* Space for the navbar */
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2d3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-info {
+    text-align: center;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.profile-name {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-profile-btn {
+    background-color: #701111;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-profile-btn:hover {
+    background-color: #560e0e;
+}
+
+/* Profile Details Styles */
+.profile-details {
+    margin-top: 20px;
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Align items vertically */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    width: 100%; /* Ensure it takes full width */
+}
+
+.profile-details h2 {
+    margin: 20px 0 10px;
+    text-align: left; /* Align header text to the left */
+}
+
+.profile-details p {
+    margin: 0 0 20px;
+    text-align: left; /* Align paragraph text to the left */
+    max-width: 600px; /* Optional: limit width for better readability */
+}
+
+.edit-profile-form {
+    margin-top: 20px;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Align form fields vertically */
+    align-items: flex-start; /* Align form fields to the start */
+    width: 100%; /* Ensure it takes full width */
+}
+
+/* Address Modal Styles */
+#address-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* Cart Modal Styles */
+.cart-modal {
+    display: none; /* Hide by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0; /* Initial opacity */
+}
+
+/* When active, make it visible */
+.cart-modal.active {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -45%);
+}
+
+/* Background overlay */
+.modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background */
+}
+
+.modal-overlay.active {
+    display: block;
+}
+
+/* Close button */
+.close-btn {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Cart items styling */
+#cart-items li {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Slideshow container styles */
+.slideshow-container {
+    max-width: 100%;
+    position: relative;
+}
+
+.mySlides {
+    display: none;
+}
+
+.mySlides img {
+    width: 1000px;
+    height: 800px;
+    object-fit: cover; 
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.active {
+    background-color: #717171;
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from { opacity: .4 }
+    to { opacity: 1 }
+}
+
+@media only screen and (max-width: 300px) {
+    .text {
+        font-size: 11px;
+    }
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev {
+    left: 0;
+    border-radius: 3px 3px 0 0;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.hover-pop:hover {
+    transform: scale(1.05);
+    background-color: #111b46;
+    color: white;
+}
+.dot {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+.active, .dot:hover {
+    background-color: #717171;
+}
+
+/* Categories Section */
+#categories ul {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f4f4f4;
+    padding: 20px 0;
+    list-style-type: none;
+    margin: 0;
+}
+
+#categories ul li a {
+    color: #333;
+    font-size: 1.2em;
+}
+
+#categories ul li a:hover {
+    color: #FF6347;
+}
+
+/* Product Section */
+#top-savers {
+    padding: 50px 20px;
+    background-color: #fff;
+}
+
+.product-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.product-item {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 250px;
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-item img {
+    width: 50%;
+    border-radius: 5px;
+}
+
+.product-item h3 {
+    margin: 10px 0;
+}
+
+.product-item .discount {
+    background-color: #FF6347;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.product-item .add-to-cart {
+    background-color: #FF6347;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product-item .add-to-cart:hover {
+    background-color: #ff5733;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 5px 0;
+}

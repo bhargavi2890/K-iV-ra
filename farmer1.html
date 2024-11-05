@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Fields</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f9f9f9;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            color: #f0a500;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Main content styling */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* Profile and Add Crop icons */
+        .profile-icon, .add-crop-icon, .Researcher-icon {
+            position: absolute;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #f0a500;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-crop-icon {
+            right: 20px;
+        }
+
+        .profile-icon {
+            right: 70px;
+        }
+
+        .Researcher-icon {
+            right: 120px;
+        }
+
+        /* Farm field grid styling */
+        .field-grid {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* Flip card container styling */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        /* Card inner container */
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-card-front {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .flip-card-front img {
+            width: 100%;
+            height: auto;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .flip-card-front h3 {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .flip-card-back {
+            background-color: #333;
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .flip-card-back h3 {
+            color: #f0a500;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .modal-content button {
+            padding: 10px 15px;
+            background-color: #f0a500;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .modal-content button:hover {
+            background-color: #e59a00;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Profile icon -->
+    <div class="profile-icon" onclick="openProfileModal()">👤</div>
+    <div class="add-crop-icon" onclick="openAddCropModal()">+</div>
+    <div class="Researcher-icon" onclick="openResearcherModal()">🧑‍🔬</div>
+
+    <!-- Sidebar with field categories -->
+    <div class="sidebar">
+        <h2>Field Categories</h2>
+        <a onclick="filterFields('all')">All Fields</a>
+        <a onclick="filterFields('wheat')">Wheat Fields</a>
+        <a onclick="filterFields('corn')">Corn Fields</a>
+        <a onclick="filterFields('rice')">Rice Fields</a>
+        <a onclick="filterFields('Vegetables')">Vegetable Fields</a>
+        <a onclick="filterFields('Fruits')">Fruit Fields</a>
+    </div>
+
+    <!-- Main content area with field cards -->
+    <div class="main-content">
+        <h1>Farm Fields</h1>
+        <p class="filter-message">Select a field category from the sidebar to view details</p>
+
+        <div class="field-grid" id="fieldGrid">
+            <!-- Field cards will be dynamically added here -->
+        </div>
+    </div>
+    <div id="researcher-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-researcher">&times;</span>
+            <h3>Researchers</h3>
+            <div class="researcher-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Researcher Name</th>
+                            <th>Crop</th>
+                            <th>Sales (₹)</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="researcher-table-body">
+                        <!-- Researchers will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="addCropModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddCropModal()">&times;</span>
+            <h3>Add a New Crop</h3>
+            <input type="text" id="crop-name" placeholder="Crop Name">
+            <input type="text" id="crop-type" placeholder="Crop Type">
+            <input type="text" id="crop-area" placeholder="Area (Acres)">
+            <input type="text" id="crop-status" placeholder="Status">
+            <input type="text" id="Yield" placeholder="Yield">
+            <input type="text" id="Sales" placeholder="Sales">
+            <input type="text" id="crop-image" placeholder="Image URL">
+            <button onclick="addCrop()">Add Crop</button>
+        </div>
+    </div>
+
+
+    <!-- Modal for viewing profile -->
+    <!-- Modal for profile -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfileModal()">×</span>
+            <h2>Farmer Profile</h2>
+            <img src="farmer.png" alt="Farmer Image" width="100" height="100">
+            <div class="input-group">
+                <label for="farmerName">Name</label>
+                <input type="text" id="farmerName" placeholder="Enter Name">
+            </div>
+            <div class="input-group">
+                <label for="farmerExperience">Experience (Years)</label>
+                <input type="number" id="farmerExperience" placeholder="Enter Experience">
+            </div>
+            <button onclick="updateProfile()">Save Profile</button>
+        </div>
+    </div>
+
+    <script>
+        // Array to store crop data
+        let crops = [
+        { name: "Wheat", type: "wheat", area: 20, status: "Growing", yield: 1000, sales: 50000, image: "Wheat1.jfif" },
+        { name: "Corn", type: "corn", area: 30, status: "Ready for Harvest", yield: 2000, sales: 80000, image: "Corn.jfif" },
+        { name: "Rice", type: "rice", area: 25, status: "Harvested", yield: 1500, sales: 60000, image: "Rice1.jfif" },
+        { name: "Tomatoes", type: "Vegetables", area: 15, status: "Growing", yield: 500, sales: 20000, image: "TOF.jfif" },
+        { name: "StrawBerry", type: "Fruits", area: 10, status: "Ready for Harvest", yield: 300, sales: 15000, image: "STF.jfif" },
+        { name: "Mango", type: "Fruits", area: 30, status: "Harvested", yield: 600, sales: 45000, image: "MangoF.jfif" }
+    
+    ];
+    let researchers = [
+            { name: "Dr. A Sharma", crop: "Wheat", sales: "100000", duration: "1 Year" },
+            { name: "Prof. B Rao", crop: "Rice", sales: "85000", duration: "2 Years" },
+            { name: "Dr. C Mehta", crop: "Corn", sales: "75000", duration: "1.5 Years" }
+        ];
+    
+
+        // Function to open profile modal
+        function openProfileModal() {
+            document.getElementById("profileModal").style.display = "flex";
+        }
+
+        function closeProfileModal() {
+            document.getElementById("profileModal").style.display = "none";
+        }
+        // Function to open and populate researcher modal
+        function openResearcherModal() {
+            const researcherTableBody = document.getElementById("researcher-table-body");
+            researcherTableBody.innerHTML = '';
+            researchers.forEach((researcher) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${researcher.name}</td>
+                    <td>${researcher.crop}</td>
+                    <td>${researcher.sales}</td>
+                    <td>${researcher.duration}</td>
+                `;
+                researcherTableBody.appendChild(row);
+            });
+            document.getElementById("researcher-modal").style.display = "flex";
+        }
+
+        function closeResearcherModal() {
+            document.getElementById("researcher-modal").style.display = "none";
+        }
+
+        // Function to open Add Crop Modal
+        function openAddCropModal() {
+            document.getElementById("addCropModal").style.display = "flex";
+        }
+
+        function closeAddCropModal() {
+            document.getElementById("addCropModal").style.display = "none";
+        }
+      
+        // Function to add crop to the crops array and display it in the grid
+        function addCrop() {
+            const name = document.getElementById('crop-name').value;
+            const type = document.getElementById('crop-type').value.toLowerCase();
+            const area = document.getElementById('crop-area').value;
+            const status = document.getElementById('crop-status').value;
+            const Yield = document.getElementById('Yield').value;
+            const Sales = document.getElementById('Sales').value;
+            const image = document.getElementById('crop-image').value;
+
+            if (name && type && area && status && Yield && Sales && image) {
+                crops.push({ name, type, area, status, Yield, Sales, image });
+                closeAddCropModal();
+                displayFields(); // Refresh the field display
+            } else {
+                alert("Please fill in all fields to add a crop.");
+            }
+        }
+
+        // Display all fields or filter based on type
+        function displayFields(filterType = 'all') {
+            const fieldGrid = document.getElementById('fieldGrid');
+            fieldGrid.innerHTML = '';
+            crops.forEach((crop) => {
+                if (filterType === 'all' || crop.type === filterType) {
+                    const card = createFlipCard(crop);
+                    fieldGrid.appendChild(card);
+                }
+            });
+        }
+
+        // Create a flip card for a crop
+        function createFlipCard(crop) {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'flip-card';
+            cardContainer.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="${crop.image}" alt="${crop.name}">
+                        <h3>${crop.name}</h3>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>${crop.name}</h3>
+                        <p>Type: ${crop.type}</p>
+                        <p>Area: ${crop.area}</p>
+                        <p>Status: ${crop.status}</p>
+                        <p>Yield: ${crop.Yield}</p>
+                        <p>Sales: ${crop.Sales}</p>
+                    </div>
+                </div>`;
+            return cardContainer;
+        }
+
+        // Filter fields by crop type
+        function filterFields(type) {
+            displayFields(type);
+        }
+
+        // Display initial fields
+        displayFields();
+    </script>
+</body>
+</html>

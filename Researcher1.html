@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Researchers</title>
+    <style>
+        /* Reset & Basic styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            background-color: #f9f9f9;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .sidebar h2, .sidebar h3 {
+            color: #f0a500;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            cursor: pointer;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        /* Main content styling */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+         /* Profile button */
+         .profile-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #f0a500;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Field grid styling */
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Flip card container styling */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-card-front {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .flip-card-front img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .flip-card-front h3 {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .flip-card-back {
+            background-color: #333;
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .flip-card-back h3 {
+            color: #f0a500;
+            margin-bottom: 10px;
+        }
+
+        /* Research details styling */
+        .research-info {
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .research-info p {
+            margin: 5px 0;
+        }
+
+        /* Document section styling */
+        .document-content {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .document-content h2 {
+            color: #333;
+        }
+
+        .document-content p {
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .document-content img {
+            width: 30%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .add-note-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #f0a500;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .add-note-btn:hover {
+            background-color: #e08c00;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content input, .modal-content button {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="profile-icon" onclick="openProfileModal()">👤</div>
+
+    <div class="sidebar">
+        <h2>Research Categories</h2>
+        <a onclick="filterFields('all')">All Fields</a>
+        <a onclick="filterFields('ongoing')">Ongoing Research</a>
+        <a onclick="filterFields('future')">Future Fields</a>
+        <a onclick="filterFields('past')">Past Works</a>
+
+        <h3>Documentation</h3>
+        <a onclick="displayDocumentation()">View Past Work</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Available Fields for Research</h1>
+        <div class="field-grid" id="fieldGrid">
+            <!-- Research field cards will be added here -->
+        </div>
+        <div id="profileModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeProfileModal()">×</span>
+                <h2>Researcher Profile</h2>
+                <img src="Researcher.jfif" alt="Researcher Image" width="100" height="100">
+                <label>Name:</label>
+                <input type="text" id="name" value="Dr. Jane Doe">
+                <label>Qualification:</label>
+                <input type="text" id="qualification" value="Ph.D. in Agronomy">
+                <label>Recommendations:</label>
+                <input type="text" id="recommendations" value="Expert in Soil Science">
+                <label>Rating:</label>
+                <input type="text" id="rating" value="⭐⭐⭐⭐⭐">
+                <label>Address:</label>
+                <input type="text" id="address" value="123 Farm Rd, Agro City">
+                <button onclick="updateProfile()">Update</button>
+            </div>
+        </div>
+    
+        <!-- Documentation content section -->
+        <div class="document-content" id="documentContent" style="display: none;">
+            <img id="documentImage" src="" alt="Crop Image">
+            <h2 id="documentTitle"></h2>
+            <p id="documentOwner"></p>
+            <p><a id="documentLink" href="#" target="_blank">View Document</a></p>
+            <button class="add-note-btn" onclick="addNote()">Add Note</button>
+        </div>
+    </div>
+
+    <script>
+         // Data for the research fields
+         const researchFields = [
+         { name: "Wheat Field ", location: "North Region", image: "Wheat1.jfif", type: "ongoing", owner: "Farmer Ravi", visits: 5, yield: 1200, status: "Growing" },
+         { name: "Tomato Field", location: "West Region", image: "TOF.jfif", type: "future", owner: "Farmer Lakshman", visits: 3, yield: 900, status: "Available Soon" },
+         { name: "StrawBerry Field", location: "East Region", image: "STF.jfif", type: "past", owner: "Farmer Prakash", visits: 8, yield: 1400, status: "Harvested" },
+         { name: "Corn Field", location: "North Region", image: "corn.jfif", type: "past", owner: "Farmer Ram kishan", visits: 4, yield: 1500, status: "Available Soon" },
+         { name: "Potato Field", location: "South Region", image: "POF.jfif", type: "ongoing", owner: "Farmer Raj KUmar", visits: 2, yield: 500, status: "Growing" },
+         { name: "Rice Field", location: "West Region", image: "Rice1.jfif", type: "future", owner: "Farmer LShiva", visits: 3, yield: 700, status: "Harvested" },
+         
+             
+         ];
+
+        const documentationDetails = {
+            title: "Soil Enrichment Analysis",
+            image: "STF.jfif",
+            owner: "Farmer Prakash",
+            link: "https://www.climateactionreserve.org/wp-content/uploads/2022/06/Soil-Enrichment-Protocol-V_1.1-final.pdf"
+        };
+
+        // Function to display fields based on selected filter
+        function displayFields(filterType = 'all') {
+            const fieldGrid = document.getElementById('fieldGrid');
+            fieldGrid.innerHTML = ''; // Clear previous fields
+
+            researchFields.forEach(field => {
+                // Show fields based on the selected filter
+                if (filterType === 'all' || field.type === filterType) {
+                    const card = createFlipCard(field);
+                    fieldGrid.appendChild(card);
+                }
+            });
+        }
+
+        // Function to create a flip card for each field
+        function createFlipCard(field) {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'flip-card';
+
+            cardContainer.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="${field.image}" alt="${field.name}">
+                        <h3>${field.name}</h3>
+                        <p>${field.location}</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h3>${field.name}</h3>
+                        <p>Owner: ${field.owner}</p>
+                        <p>Visits: ${field.visits}</p>
+                        <p>Total Yield: ${field.yield}</p>
+                        <p>Status: ${field.status}</p>
+                    </div>
+                </div>
+            `;
+            return cardContainer;
+        }
+        function openProfileModal() {
+            document.getElementById("profileModal").style.display = "flex";
+        }
+
+        function closeProfileModal() {
+            document.getElementById("profileModal").style.display = "none";
+        }
+
+        function updateProfile() {
+            const name = document.getElementById("name").value;
+            const qualification = document.getElementById("qualification").value;
+            const recommendations = document.getElementById("recommendations").value;
+            const rating = document.getElementById("rating").value;
+            const address = document.getElementById("address").value;
+
+            // Update logic (could be saving to a database or local storage)
+            console.log("Updated Profile:");
+            console.log(`Name: ${name}`);
+            console.log(`Qualification: ${qualification}`);
+            console.log(`Recommendations: ${recommendations}`);
+            console.log(`Rating: ${rating}`);
+            console.log(`Address: ${address}`);
+
+            alert("Profile updated successfully!");
+        }
+
+        function displaySection(section) {
+            const fieldGrid = document.getElementById("fieldGrid");
+            fieldGrid.innerHTML = "";  // Clear previous content
+
+            if (section === "ongoing") {
+                fieldGrid.innerHTML = `<div>Ongoing Research Fields will be displayed here</div>`;
+            } else if (section === "past") {
+                fieldGrid.innerHTML = `<div>Past Works will be displayed here</div>`;
+            } else if (section === "documentation") {
+                fieldGrid.innerHTML = `<div>Documentation will be displayed here</div>`;
+            }
+        }
+        // Function to filter fields by type and display
+        function filterFields(type) {
+            // Clear the documentation section when switching filters
+            const documentContent = document.getElementById('documentContent');
+            documentContent.style.display = 'none';
+
+            displayFields(type); // Display fields based on the selected type
+        }
+
+        // Function to display documentation details
+        function displayDocumentation() {
+            const documentContent = document.getElementById('documentContent');
+            documentContent.style.display = 'block'; // Show documentation section
+
+            // Hide field grid when displaying documentation
+            const fieldGrid = document.getElementById('fieldGrid');
+            fieldGrid.innerHTML = ''; // Clear field grid
+
+            // Show documentation details
+            document.getElementById('documentImage').src = documentationDetails.image;
+            document.getElementById('documentTitle').textContent = documentationDetails.title;
+            document.getElementById('documentOwner').textContent = `Owner: ${documentationDetails.owner}`;
+            document.getElementById('documentLink').href = documentationDetails.link;
+        }
+
+        // Placeholder for add note functionality
+        function addNote() {
+            alert("Add Note functionality is not yet implemented.");
+        }
+
+        // Initial load of all fields
+        window.onload = function() {
+            displayFields(); // Show all fields initially
+        };
+    </script>
+</body>
+</html>

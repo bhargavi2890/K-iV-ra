@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Fresh - Online Store</title>
+    <link rel="stylesheet" href="s1.css">
+    <style>
+        /* Additional styles for the QR code */
+        .qrcode {
+            margin: 20px auto;
+            width: 200px; /* Adjust this to control QR code size */
+            height: 200px;
+        }
+        
+
+        /* Additional styles for the new component */
+        .navbar .user-actions a {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        /* Modal and Overlay styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            width: 80%; /* Adjusted width */
+            max-width: 600px; /* Set a max width */
+            height: 80vh; /* Adjusted height for more vertical space */
+            border-radius: 8px;
+            overflow-y: auto; /* Enables scrolling if content overflows */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .cart-modal.active {
+            display: block;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+
+        .logo {
+            display: flex; /* Use flexbox for better alignment */
+            align-items: center; /* Center items vertically */
+            padding: 10px; /* Add some padding */
+        }
+
+        .logo img {
+            max-width: 100px; /* Set a maximum width */
+            height: auto; /* Maintain aspect ratio */
+            margin-left: 10px; /* Space between the title and logo */
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Slideshow Styles */
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        .text {
+            color: #f2f2f2;
+            font-size: 15px;
+            padding: 8px 12px;
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active {
+            background-color: #717171;
+        }
+        
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Load the Google Maps API with Places library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <header>
+        <div class="top-navbar">
+            <div class="logo">
+                <a href="hi.html"><h1>KṛṣiVīra</h1></a>
+                <img src="logo.jpeg" alt="Logo" class="h-16 w-40">
+            </div>
+            <div class="location">
+                <label for="location">Your City:</label>
+                <select id="city-dropdown">
+                    <option value="" disabled selected>Select your city</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                </select>
+                <button id="open-map-btn">Choose from Map</button>
+                <input type="text" id="location" placeholder="Selected Location">
+            </div>
+
+            <!-- Map Modal with Autocomplete Search -->
+            <div id="map-modal" class="cart-modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-map-btn">&times;</span>
+                    <input type="text" id="autocomplete" placeholder="Type a location" />
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="profile.html" id="profile-btn">Profile</a>
+                <a href="#" id="wishlist-btn">Wishlist (<span id="wishlist-count">0</span>)</a>
+                <a href="#" id="cart-btn">My Cart (<span id="cart-count">0</span>)</a>
+
+                <div id="orders-modal" class="cart-modal">
+                    <h2>Your Previous Orders</h2>
+                    <ul id="order-items"></ul>
+                    <button id="close-orders">Close</button>
+                </div>
+
+                <div id="modal-overlay" class="modal-overlay"></div>
+            </div>
+        </div>
+    </header>
+
+    <div id="cart-modal" class="cart-modal">
+        <span class="close-btn" id="close-cart">&times;</span>
+        <h2>Your Cart</h2>
+        <ul id="cart-items">
+            <!-- Cart items will be injected here by JavaScript -->
+        </ul>
+        <p id="cart-total"></p>
+        <button id="checkout-btn" class="btn">Proceed to Checkout</button>
+        <div class="qrcode"></div>
+    </div>
+
+    <!-- Address Modal -->
+    <div id="address-modal" class="cart-modal">
+        <span class="close-btn" id="close-address">&times;</span>
+        <h2>Manage Addresses</h2>
+        <ul id="address-list">
+            <!-- Addresses will be injected by JavaScript -->
+        </ul>
+        <input type="text" id="new-address" placeholder="Add new address">
+        <button id="add-address-btn">Add Address</button>
+    </div>
+
+    <!-- Previous Orders Modal -->
+    <div id="orders-modal" class="cart-modal">
+        <span class="close-btn" id="close-orders">&times;</span>
+        <h2>Your Previous Orders</h2>
+        <ul id="orders-items">
+            <!-- Previous order items will be injected here by JavaScript -->
+        </ul>
+    </div>
+
+    <!-- Overlay Background -->
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <!-- Slideshow Section -->
+    <div class="slideshow-container">
+        <div class="mySlides fade">
+            <img src="image1.JFIF" style="width:100%">
+            <div class="text">Caption 1</div>
+        </div>
+
+        <div class="mySlides fade">
+            <img src="image2.JFIF" style="width:100%">
+            <div class="text">Caption 2</div>
+        </div>
+
+        <div class="mySlides fade">
+            <img src="image3.jFIF" style="width:100%">
+            <div class="text">Caption 3</div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <div style="text-align:center">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+
+    <!-- Main Banner Section -->
+    <section id="top-savers">
+        <h2>Top Savers Today</h2>
+        <div class="product-grid">
+            <div class="product-item">
+                <img src="FRUITS1.jFIF" alt="Product 1">
+                <h3>FRUITS</h3>
+                <a href="fruits.html" class="btn">View Products</a>
+            </div>
+            <div class="product-item">
+                <img src="VEGE1.jFIF" alt="Product 2">
+                <h3>VEGETABLES</h3>
+                <a href="vegetables.html" class="btn">View Products</a>
+            </div>
+            <div class="product-item">
+                <img src="multi grain.jfif" alt="Product 3">
+                <h3>GRAINS</h3>
+                <a href="grains.html" class="btn">View Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Farm Fresh. All rights reserved.</p>
+    </footer>
+
+    <script>
+            const cartItems = [];
+            const predefinedItems = [
+                { name: "Apple", price: 120 },
+                { name: "Mangoes", price: 300 },
+                { name: "Tomato", price: 30 },
+                { name: "Potato", price: 40 },
+                { name: "Wheat", price: 100 },
+            ];
+    
+            // Display cart items
+            function displayCartItems() {
+                const cartItemsContainer = document.getElementById('cart-items');
+                cartItemsContainer.innerHTML = "";
+                let total = 0;
+                if (cartItems.length === 0) {
+                    cartItemsContainer.innerHTML = "<li>Your cart is empty.</li>";
+                } else {
+                    cartItems.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = `${item.name} - ₹${item.price}`;
+                        cartItemsContainer.appendChild(li);
+                        total += item.price;
+                    });
+                }
+                document.getElementById('cart-total').textContent = `Total: ₹${total}`;
+            }
+    
+            // Generate QR code
+            function generateQRCode() {
+                const qrContainer = document.querySelector('.qrcode');
+                qrContainer.innerHTML = ""; // Clear previous QR code
+                new QRCode(qrContainer, {
+                    text: "upi://pay?pa=merchant@upi&pn=MerchantName&am=590&cu=INR",
+                    width: 150,
+                    height: 150
+                });
+            }
+    
+            // Show cart modal with QR code
+            document.getElementById('cart-btn').addEventListener('click', function () {
+                const cartModal = document.getElementById('cart-modal');
+                cartModal.classList.add('active');
+                displayCartItems();
+                generateQRCode();
+            });
+    
+            // Close cart modal
+            document.getElementById('close-cart').addEventListener('click', function () {
+                const cartModal = document.getElementById('cart-modal');
+                cartModal.classList.remove('active');
+            });
+    
+            // Add predefined items to cart for testing
+            predefinedItems.forEach(item => addToCart(item));
+    
+            function addToCart(item) {
+                cartItems.push(item);
+                document.getElementById('cart-count').textContent = cartItems.length;
+            }
+        // Slideshow functionality
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            const slides = document.getElementsByClassName("mySlides");
+            const dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,276 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.logo h1 {
+    color: #FF6347;
+    font-size: 1.5em;
+}
+.top-navbar {
+    position: fixed; /* Makes the navbar fixed at the top */
+    top: 0; /* Aligns it to the top */
+    left: 0;
+    width: 100%; /* Full width */
+    background-color: #333; /* Background to ensure visibility */
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Ensure it stays above other elements */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for better look */
+}
+
+.location {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.user-actions a {
+    margin: 0 10px;
+    color: white; /* Change link color */
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust height for fixed navbar */
+    margin-top: 60px; /* Space for the navbar */
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2d3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-info {
+    text-align: center;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.profile-name {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-profile-btn {
+    background-color: #701111;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-profile-btn:hover {
+    background-color: #560e0e;
+}
+
+.profile-details {
+    margin-top: 20px;
+}
+
+.profile-details h2 {
+    margin: 20px 0 10px;
+}
+
+.profile-details p {
+    margin: 0 0 20px;
+}
+
+.profile-details {
+    margin-top: 20px;
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Align items vertically */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    width: 100%; /* Ensure it takes full width */
+}
+
+.profile-details h2 {
+    margin: 20px 0 10px;
+    text-align: left; /* Align header text to the left */
+}
+
+.profile-details p {
+    margin: 0 0 20px;
+    text-align: left; /* Align paragraph text to the left */
+    max-width: 600px; /* Optional: limit width for better readability */
+}
+
+.edit-profile-form {
+    margin-top: 20px;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Align form fields vertically */
+    align-items: flex-start; /* Align form fields to the start */
+    width: 100%; /* Ensure it takes full width */
+}
+
+
+.edit-profile-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-profile-form label {
+    margin-top: 10px;
+}
+
+.edit-profile-form input,
+.edit-profile-form textarea {
+    margin-top: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.edit-profile-form button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+}
+
+.edit-profile-form button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+.edit-profile-form button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.edit-profile-form button[type="button"] {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-profile-form button[type="button"]:hover {
+    background-color: #c82333;
+}
+
+/* General Styles */
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+h1, h2, h3 {
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff5733;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Previous Orders Section */
+.previous-orders {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.orders-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.orders-btn:hover {
+    background-color: #0056b3;
+}
